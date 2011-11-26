@@ -1,0 +1,32 @@
+--- 
+solr_baseurl: http://localhost:8983/solr
+html_dir: /tmp/grabble_html
+logfile: /tmp/grabble.log
+#
+# Parameters for sites:
+#   url: 
+#     The url to start crawling at.
+#     Must be a string.
+#  
+#  hostnames:
+#     Valid hostnames to follow while crawling.
+#     Must be an array of strings.
+#
+#   exclude:
+#     Exclude directories matching paths or wildcards (see 
+#     --exclude-directories in wget(1)).
+#     Must be an array of strings.
+#
+#   reject:
+#     Skip downloading of files by pattern or suffix (see --reject in wget(1)).
+#     Must be an array of strings.
+#     
+site_defaults:
+  exclude: []
+  reject: [png, jpg, jpeg, gif, ogg, mp3, swf, flv, mpeg, mp4, css, js]
+#
+sites:
+-
+  url: https://your.domain.tld/something
+  exclude: [/feed, /api]
+  reject: [png, jpg, gif, mp3, flv, css, js]

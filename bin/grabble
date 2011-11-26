@@ -1,0 +1,46 @@
+#!/usr/bin/ruby
+
+if RUBY_VERSION =~ /1.8/
+  $stderr.puts "Error: ruby v1.9 required."
+  exit 1
+end
+
+require "#{File.expand_path(File.dirname(__FILE__))}/../lib/grabble"
+
+DEBUG = ARGV.delete('--debug')
+arg = ARGV.shift.to_s
+
+if ['', '-h', '--help'].include?(arg) || ARGV.length > 0
+  $stderr.puts "Usage: #{File.basename(__FILE__)} [--debug] path/to/config.yml"
+  exit 1
+end
+
+unless File.file?(arg) && File.readable?(arg)
+  echo "Error: '#{arg}' is not a readable file."
+  exit 1
+end
+
+include Grabble
+
+Grabble::Config.load(arg)
+hdir = Grabble::Config.html_dir
+Dir.mkdir(hdir) unless File.directory?(hdir)
+Dir.chdir(hdir)
+
+Grabble::Config.sites.each do |site|
+  Grabble.log.info "Running for #{site.inspect}"
+
+  solrurls = Solr.urls_in_index(site.hostname)
+
+  foundurls = Wget.crawl(site)
+  foundurls.each do |url,filepath|
+    Solr.update(site, url, filepath)
+  end
+
+  rest = solrurls - foundurls.keys
+  brokenurls = Wget.spider(rest)
+  Solr.delete(brokenurls)
+
+  Solr.commit
+  Grabble.log.info "Finished run for #{site.hostname}"
+end

@@ -1,0 +1,46 @@
+Grabble
+=======
+
+Glueing wget to solr.
+
+Grabble fills the niche of a light-weight and yet not entirely stupid crawler
+to keep a solr index up to date.
+
+It utilizes wget to crawl over and fetch content from websites and check for
+the availability of documents present in the solr-index. Then the solr-index is
+updated and cleaned respectively. Scheduling is left to cron.
+
+
+Requirements
+------------
+- ruby >= 1.9 with stdlib
+- wget installed and in $PATH
+- rsolr >= 1.0.2 (gem)
+
+Features
+--------
+- Low memory usage.
+- Multiple sites.
+- Skip files based on pattern or suffix.
+- Usable as library.
+
+Todo
+----
+- Deal with other content-types than text/html and text/plain.
+- Nicer displaying of errors.
+- Option to not crawl but only push content present in filesystem to solr.
+
+Install
+-------
+# gem install grabble-0.1.gem
+
+Usage
+-----
+1. Write a config-file (see ext/grabble.yml).
+2. Run grabble: /path/to/bin/grabble [--debug] /path/to/grabble.yml
+
+License
+-------
+The GNU General Public License v3.0 <http://www.gnu.org/copyleft/gpl.html>.
+
+© 2011 Fup Duck <grabble@duckdalbe.org>
